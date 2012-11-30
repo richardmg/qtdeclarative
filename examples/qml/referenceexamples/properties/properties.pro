@@ -7,7 +7,7 @@ HEADERS += person.h \
            birthdayparty.h
 RESOURCES += properties.qrc
 
-target.path = $$[QT_INSTALL_EXAMPLES]/qtquick/qml/referenceexamples/properties
+target.path = $$[QT_INSTALL_EXAMPLES]/qtqml/referenceexamples/properties
 sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS properties.pro example.qml
 sources.path = $$target.path
 INSTALLS += target sources

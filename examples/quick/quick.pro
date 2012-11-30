@@ -18,5 +18,5 @@ SUBDIRS = accessibility \
 
 # install
 sources.files = quick.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick/quick
+sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick
 INSTALLS += sources

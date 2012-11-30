@@ -8,5 +8,5 @@ SUBDIRS +=imageprovider \
 
 #Install
 sources.files = qml.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick/qml
+sources.path = $$[QT_INSTALL_EXAMPLES]/qtqml
 INSTALLS += sources

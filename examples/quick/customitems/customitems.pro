@@ -13,5 +13,5 @@ SUBDIRS = \
 
 # install
 sources.files = customitems.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick/quick/customitems
+sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick/customitems
 INSTALLS += sources

@@ -11,6 +11,6 @@ HEADERS += \
 OTHER_FILES += main.qml
 
 sources.files = $$SOURCES $$HEADERS $$OTHER_FILES customgeometry.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick/quick/scenegraph/customgeometry
+sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick/scenegraph/customgeometry
 target.path = $$sources.path
 INSTALLS += sources target

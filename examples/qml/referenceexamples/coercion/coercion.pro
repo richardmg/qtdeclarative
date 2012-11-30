@@ -7,7 +7,7 @@ HEADERS += person.h \
            birthdayparty.h
 RESOURCES += coercion.qrc
 
-target.path = $$[QT_INSTALL_EXAMPLES]/qtquick/qml/referenceexamples/coercion
+target.path = $$[QT_INSTALL_EXAMPLES]/qtqml/referenceexamples/coercion
 sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS coercion.pro example.qml
 sources.path = $$target.path
 INSTALLS += target sources

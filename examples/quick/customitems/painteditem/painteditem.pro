@@ -13,7 +13,7 @@ OTHER_FILES += textballoon.json
 
 DESTDIR = TextBalloonPlugin
 
-INSTALL_PATH = $$[QT_INSTALL_EXAMPLES]/qtquick/quick/customitems/painteditem/
+INSTALL_PATH = $$[QT_INSTALL_EXAMPLES]/qtquick/customitems/painteditem/
 qdeclarativesources.files += \
     TextBalloonPlugin/qmldir TextBalloonPlugin/plugin.h
 qdeclarativesources.path += $$INSTALL_PATH/TextBalloonPlugin

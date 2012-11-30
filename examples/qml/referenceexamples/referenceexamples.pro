@@ -15,5 +15,5 @@ SUBDIRS += \
 !contains(QT_CONFIG, no-widgets): SUBDIRS += extended
 
 sources.files = referenceexamples.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtquick/qml/referenceexamples
+sources.path = $$[QT_INSTALL_EXAMPLES]/qtqml/referenceexamples
 INSTALLS += sources

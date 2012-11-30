@@ -3,7 +3,7 @@ TEMPLATE = app
 QT += quick qml
 SOURCES += main.cpp
 
-target.path = $$[QT_INSTALL_EXAMPLES]/qtquick/quick/modelviews
+target.path = $$[QT_INSTALL_EXAMPLES]/qtquick/modelviews
 qml.files = \
         modelviews.qml \
         gridview \
@@ -13,7 +13,7 @@ qml.files = \
         pathview \
         visualdatamodel \
         visualitemmodel
-qml.path = $$[QT_INSTALL_EXAMPLES]/qtquick/quick/modelviews
+qml.path = $$[QT_INSTALL_EXAMPLES]/qtquick/modelviews
 sources.files = $$SOURCES modelviews.pro
 sources.path = $$qml.path
 INSTALLS += sources target qml

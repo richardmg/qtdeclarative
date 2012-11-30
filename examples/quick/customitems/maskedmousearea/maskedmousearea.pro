@@ -7,7 +7,7 @@ HEADERS += maskedmousearea.h
 SOURCES += main.cpp \
            maskedmousearea.cpp
 
-target.path = $$[QT_INSTALL_EXAMPLES]/qtquick/quick/customitems/maskedmousearea
+target.path = $$[QT_INSTALL_EXAMPLES]/qtquick/customitems/maskedmousearea
 qml.files = maskedmousearea.qml images
 qml.path = $$target.path
 sources.files = $$SOURCES $$HEADERS maskedmousearea.pro
