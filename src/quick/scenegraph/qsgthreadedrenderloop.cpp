@@ -1057,11 +1057,12 @@ void QSGThreadedRenderLoop::polishAndSync(Window *w, bool inExpose)
 {
     qCDebug(QSG_LOG_RENDERLOOP) << "polishAndSync" << (inExpose ? "(in expose)" : "(normal)") << w->window;
 
+    killTimer(w->timerId);
+    w->timerId = 0;
+
     QQuickWindow *window = w->window;
     if (!w->thread || !w->thread->window) {
         qCDebug(QSG_LOG_RENDERLOOP) << "- not exposed, abort";
-        killTimer(w->timerId);
-        w->timerId = 0;
         return;
     }
 
@@ -1071,8 +1072,6 @@ void QSGThreadedRenderLoop::polishAndSync(Window *w, bool inExpose)
     w = windowFor(m_windows, window);
     if (!w || !w->thread || !w->thread->window) {
         qCDebug(QSG_LOG_RENDERLOOP) << "- removed after event flushing, abort";
-        killTimer(w->timerId);
-        w->timerId = 0;
         return;
     }
 
@@ -1110,9 +1109,6 @@ void QSGThreadedRenderLoop::polishAndSync(Window *w, bool inExpose)
 
     if (profileFrames)
         syncTime = timer.nsecsElapsed();
-
-    killTimer(w->timerId);
-    w->timerId = 0;
 
     if (m_animation_timer == 0 && m_animation_driver->isRunning()) {
         qCDebug(QSG_LOG_RENDERLOOP) << "- advancing animations";
