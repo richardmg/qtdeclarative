@@ -102,6 +102,8 @@ public:
     QQmlContextData *parentContextData() const { return parentContext.contextData(); }
     QFiniteStack<QPointer<QObject> > &allCreatedObjects() const { return sharedState->allCreatedObjects; }
 
+    void connectToCodeBehind();
+
 private:
     QQmlObjectCreator(QQmlContextData *contextData, QV4::CompiledData::CompilationUnit *compilationUnit, QQmlObjectCreatorSharedState *inheritedSharedState);
 

@@ -1202,6 +1202,111 @@ QObject *QQmlObjectCreator::createInstance(int index, QObject *parent, bool isCo
     return result ? instance : 0;
 }
 
+void connectSlotsByName(QObject *objectWithSlots, QObject *o)
+{
+    if (!o)
+        return;
+    const QMetaObject *mo = o->metaObject();
+    Q_ASSERT(mo);
+    const QObjectList list = // list of all objects to look for matching signals including...
+            o->findChildren<QObject *>(QString()) // all children of 'o'...
+            << o; // and the object 'o' itself
+
+    // for each method/slot of objectWithSlots ...
+    const QMetaObject *objectWithSlotsMo = objectWithSlots->metaObject();
+    for (int i = 0; i < objectWithSlotsMo->methodCount(); ++i) {
+        const QByteArray slotSignature = objectWithSlotsMo->method(i).methodSignature();
+        const char *slot = slotSignature.constData();
+        Q_ASSERT(slot);
+
+        // ...that starts with "on_", ...
+        if (slot[0] != 'o' || slot[1] != 'n' || slot[2] != '_')
+            continue;
+
+        // ...we check each object in our list, ...
+        bool foundIt = false;
+        for(int j = 0; j < list.count(); ++j) {
+            const QObject *co = list.at(j);
+            const QByteArray coName = co->objectName().toLatin1();
+
+            // ...discarding those whose objectName is not fitting the pattern "on_<objectName>_...", ...
+            if (coName.isEmpty() || qstrncmp(slot + 3, coName.constData(), coName.size()) || slot[coName.size()+3] != '_')
+                continue;
+
+            const char *signal = slot + coName.size() + 4; // the 'signal' part of the slot name
+
+            // ...for the presence of a matching signal "on_<objectName>_<signal>".
+            const QMetaObject *smeta;
+            //int sigIndex = QObjectPrivate::get(co)->signalIndex(signal, &smeta);
+            int sigIndex = co->metaObject()->indexOfSignal(signal);
+
+            if (sigIndex < 0) {
+                // if no exactly fitting signal (name + complete parameter type list) could be found
+                // look for just any signal with the correct name and at least the slot's parameter list.
+                // Note: if more than one of thoses signals exist, the one that gets connected is
+                // chosen 'at random' (order of declaration in source file)
+                QList<QByteArray> compatibleSignals;
+                const QMetaObject *smo = co->metaObject();
+                int sigLen = qstrlen(signal) - 1; // ignore the trailing ')'
+                for (int k = QMetaObjectPrivate::absoluteSignalCount(smo)-1; k >= 0; --k) {
+                    const QMetaMethod method = QMetaObjectPrivate::signal(smo, k);
+                    if (!qstrncmp(method.methodSignature().constData(), signal, sigLen)) {
+                        smeta = method.enclosingMetaObject();
+                        sigIndex = k;
+                        compatibleSignals.prepend(method.methodSignature());
+                    }
+                }
+                if (compatibleSignals.size() > 1)
+                    qWarning() << "QMetaObject::connectSlotsByName: Connecting slot" << slot
+                               << "with the first of the following compatible signals:" << compatibleSignals;
+            }
+
+            if (sigIndex < 0)
+                continue;
+
+            // we connect it...
+            if (QMetaObject::connect(co, sigIndex, objectWithSlots, i)) {
+                foundIt = true;
+                // ...and stop looking for further objects with the same name.
+                // Note: the Designer will make sure each object name is unique in the above
+                // 'list' but other code may create two child objects with the same name. In
+                // this case one is chosen 'at random'.
+                break;
+            }
+        }
+        if (foundIt) {
+            // we found our slot, now skip all overloads
+            while (objectWithSlotsMo->method(i + 1).attributes() & QMetaMethod::Cloned)
+                  ++i;
+        } else if (!(objectWithSlotsMo->method(i).attributes() & QMetaMethod::Cloned)) {
+            // check if the slot has the following signature: "on_..._...(..."
+            int iParen = slotSignature.indexOf('(');
+            int iLastUnderscore = slotSignature.lastIndexOf('_', iParen-1);
+            if (iLastUnderscore > 3)
+                qWarning("QMetaObject::connectSlotsByName: No matching signal for %s", slot);
+        }
+    }
+}
+
+
+Q_QML_EXPORT QHash<QString, QObject *> qqmlcodeBehindList;
+
+void QQmlObjectCreator::connectToCodeBehind()
+{
+    auto &qmlObjects = sharedState->allCreatedObjects;
+    for (int i = 0; i < qmlObjects.count(); ++i) {
+        QObject *qmlObject = qmlObjects[i];
+        QString id = qmlObject->objectName();
+        if (!qqmlcodeBehindList.contains(id))
+            continue;
+
+        QObject *codeBehind = qqmlcodeBehindList.value(id);
+        connectSlotsByName(codeBehind, qmlObject);
+        codeBehind->setProperty(id.toUtf8().constData(), QVariant::fromValue(qmlObject));
+        QQmlEngine::contextForObject(qmlObject)->engine()->rootContext()->setContextProperty(QStringLiteral("codebehind_") + id, codeBehind);
+    }
+}
+
 QQmlContextData *QQmlObjectCreator::finalize(QQmlInstantiationInterrupt &interrupt)
 {
     Q_ASSERT(phase == ObjectsCreated || phase == Finalizing);
@@ -1209,6 +1314,7 @@ QQmlContextData *QQmlObjectCreator::finalize(QQmlInstantiationInterrupt &interru
 
     QQmlObjectCreatorRecursionWatcher watcher(this);
     ActiveOCRestorer ocRestorer(this, QQmlEnginePrivate::get(engine));
+
 
     while (!sharedState->allCreatedBindings.isEmpty()) {
         QQmlAbstractBinding::Ptr b = sharedState->allCreatedBindings.pop();
@@ -1266,6 +1372,8 @@ QQmlContextData *QQmlObjectCreator::finalize(QQmlInstantiationInterrupt &interru
         if (watcher.hasRecursed() || interrupt.shouldInterrupt())
             return 0;
     }
+
+    connectToCodeBehind();
 
     phase = Done;
 
