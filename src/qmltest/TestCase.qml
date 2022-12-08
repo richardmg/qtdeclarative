@@ -1577,7 +1577,7 @@ Item {
 
         \sa mousePress(), mouseRelease(), mouseClick(), mouseDoubleClickSequence(), mouseDrag(), mouseWheel()
     */
-    function mouseMove(item, x, y, delay, buttons) {
+    function mouseMove(item, x, y, delay, buttons, modifiers = 0) {
         if (!qtest_verifyItem(item, "mouseMove"))
             return
 
@@ -1589,7 +1589,7 @@ Item {
             x = item.width / 2
         if (y === undefined)
             y = item.height / 2
-        if (!qtest_events.mouseMove(item, x, y, delay, buttons))
+        if (!qtest_events.mouseMove(item, x, y, delay, buttons, modifiers))
             qtest_fail("window not shown", 2)
     }
 
