@@ -1476,12 +1476,12 @@ Item {
         // along a certain axis if a distance greater than zero was given for that axis.
         var dragTriggerXDistance = dx > 0 ? (util.dragThreshold + 1) : 0
         var dragTriggerYDistance = dy > 0 ? (util.dragThreshold + 1) : 0
-        mouseMove(item, x + dragTriggerXDistance, y + dragTriggerYDistance, moveDelay, button)
+        mouseMove(item, x + dragTriggerXDistance, y + dragTriggerYDistance, moveDelay, button, modifiers)
         if (intermediateDx !== 0 || intermediateDy !== 0) {
-            mouseMove(item, x + intermediateDx, y + intermediateDy, moveDelay, button)
-            mouseMove(item, x + 2*intermediateDx, y + 2*intermediateDy, moveDelay, button)
+            mouseMove(item, x + intermediateDx, y + intermediateDy, moveDelay, button, modifiers)
+            mouseMove(item, x + 2*intermediateDx, y + 2*intermediateDy, moveDelay, button, modifiers)
         }
-        mouseMove(item, x + dx, y + dy, moveDelay, button)
+        mouseMove(item, x + dx, y + dy, moveDelay, button, modifiers)
         mouseRelease(item, x + dx, y + dy, button, modifiers, delay)
     }
 
