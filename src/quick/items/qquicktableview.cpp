@@ -4564,6 +4564,13 @@ bool QQuickTableViewPrivate::scrollToRow(int row, Qt::Alignment alignment, qreal
     // allow moving currentIndex out of the viewport, we support scrolling
     // to a row that is adjacent to the loaded table. So start by checking
     // if we should load en extra row.
+
+    if (rebuildOptions != QQuickTableViewPrivate::RebuildOption::None) {
+        // There are pending changes. Some of which could be changes
+        // to the model. In that case, we cannot scroll (and anyway not
+        // load edges below which might not even exist in the model).
+        return false;
+    }
     if (row < topRow()) {
         if (row != nextVisibleEdgeIndex(Qt::TopEdge, topRow() - 1))
             return false;
@@ -4606,6 +4613,13 @@ bool QQuickTableViewPrivate::scrollToColumn(int column, Qt::Alignment alignment,
     // allow moving currentIndex out of the viewport, we support scrolling
     // to a column that is adjacent to the loaded table. So start by checking
     // if we should load en extra column.
+
+    if (rebuildOptions != QQuickTableViewPrivate::RebuildOption::None) {
+        // There are pending changes. Some of which could be changes
+        // to the model. In that case, we cannot scroll (and anyway not
+        // load edges below which might not even exist in the model).
+        return false;
+    }
     if (column < leftColumn()) {
         if (column != nextVisibleEdgeIndex(Qt::LeftEdge, leftColumn() - 1))
             return false;
