@@ -177,6 +177,10 @@ QQuickSelectionRectanglePrivate::QQuickSelectionRectanglePrivate()
     });
 
     QObject::connect(m_tapHandler, &QQuickTapHandler::tapped, [this] {
+        const auto modifiers = m_tapHandler->point().modifiers();
+        if (modifiers != Qt::NoModifier)
+            return;
+
         updateActiveState(false);
     });
 
@@ -237,16 +241,18 @@ QQuickSelectionRectanglePrivate::QQuickSelectionRectanglePrivate()
         const auto modifiers = m_dragHandler->centroid().modifiers();
 
         if (m_dragHandler->active()) {
-            if (!m_selectable->startSelection(startPos))
-                return;
-            if (!modifiers.testFlag(Qt::ControlModifier))
-                m_selectable->clearSelection();
-            m_selectable->setSelectionStartPos(startPos);
-            m_selectable->setSelectionEndPos(dragPos);
-            m_draggedHandle = nullptr;
-            updateHandles();
-            updateActiveState(true);
-            updateDraggingState(true);
+            if (modifiers == Qt::NoModifier || modifiers == Qt::ControlModifier) {
+                if (!m_selectable->startSelection(startPos))
+                    return;
+                if (!modifiers.testFlag(Qt::ControlModifier))
+                    m_selectable->clearSelection();
+                m_selectable->setSelectionStartPos(startPos);
+                m_selectable->setSelectionEndPos(dragPos);
+                m_draggedHandle = nullptr;
+                updateHandles();
+                updateActiveState(true);
+                updateDraggingState(true);
+            }
         } else {
             m_scrollTimer.stop();
             m_selectable->normalizeSelection();
