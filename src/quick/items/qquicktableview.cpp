@@ -4946,7 +4946,7 @@ bool QQuickTableViewPrivate::setCurrentIndexFromKeyEvent(QKeyEvent *e)
     }
 
     auto beginMoveCurrentIndex = [&](){
-        if (!select) {
+        if (!select && e->key() != Qt::Key_Tab && e->key() != Qt::Key_Backtab) {
             clearSelection();
         } else if (selectionRectangle().isEmpty()) {
             const int serializedStartIndex = modelIndexToCellIndex(selectionModel->currentIndex());
