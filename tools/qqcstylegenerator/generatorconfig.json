@@ -1,0 +1,47 @@
+{
+    "image formats": "png@1x, png@2x, svg",
+
+    "controls": [
+    {
+        "name": "Button",
+        "copy": ":/Button.qml",
+        "component set": "ButtonTemplate",
+        "atoms": {
+            "background": "background (image9p, json)",
+            "contents": "label"
+        },
+        "states": {
+            "normal": "idle",
+            "disabled": "blocked",
+            "hovered": "hovered",
+            "pressed": "pressed",
+            "checked": "checked",
+            "checked-pressed": "checkedPressed",
+            "checked-hovered": "checkedHovered"
+        }
+    },
+    {
+        "name": "Switch",
+        "copy": ":/Switch.qml",
+        "component set": "SwitchTemplate",
+        "atoms": {
+            "background": "SwitchBackground, background (image9p)",
+            "background-lefticon": "SwitchBackground, iconLeftOff (image)",
+            "background-righticon": "SwitchBackground, iconRightOff (image)",
+            "contents": "SwitchBackground, background",
+            "handle": "SwitchHandle, handle (image)",
+            "handle-lefticon": "SwitchHandle, iconLeftOn (image)",
+            "handle-righticon": "SwitchHandle, iconRightOn (image)"
+        },
+        "states": {
+            "normal": "idleOFF",
+            "disabled": "blocked",
+            "hovered": "hovered",
+            "pressed": "pressedOFF",
+            "checked": "idleON",
+            "checked-pressed": "pressedON",
+            "checked-hovered": "checkedHovered"
+        }
+    }
+    ]
+}
