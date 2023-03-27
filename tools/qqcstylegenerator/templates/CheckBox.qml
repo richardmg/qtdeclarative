@@ -12,10 +12,11 @@ T.CheckBox {
                              implicitIndicatorHeight + topPadding + bottomPadding)
 
     spacing: 6
+    LayoutMirroring.enabled: true
 
     topPadding: background ? background.topPadding : 0
-    leftPadding: background ? background.leftPadding : 0
-    rightPadding: background ? background.rightPadding : 0
+    leftPadding: 18//background ? background.leftPadding : 0
+    rightPadding: 20//background ? background.rightPadding : 0
     bottomPadding: background ? background.bottomPadding : 0
 
     topInset: background ? -background.topInset || 0 : 0

@@ -5,8 +5,7 @@ import QtQuick.Templates as T
 T.Switch {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitIndicatorWidth)
+    implicitWidth: leftInset + implicitBackgroundWidth + spacing + implicitContentWidth + rightPadding
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding,
                              implicitIndicatorHeight + topPadding + bottomPadding)
@@ -14,17 +13,17 @@ T.Switch {
     spacing: 6
 
     topPadding: background ? background.topPadding : 0
-    leftPadding: background.width + spacing
-    rightPadding: spacing
+    leftPadding: 122//background ? background.leftPadding : 0
+    rightPadding: background ? background.rightPadding : 0
     bottomPadding: background ? background.bottomPadding : 0
     topInset: background ? -background.topInset || 0 : 0
     leftInset: background ? -background.leftInset || 0 : 0
-    rightInset: background ? (-background.rightInset || 0) + (2 * spacing + implicitContentWidth + rightPadding) : 0
+    rightInset: contentItem.width + spacing
     bottomInset: background ? -background.bottomInset || 0 : 0
 
     indicator: Item {
-        implicitWidth: Math.max(handle.width, background.implicitWidth)
-        implicitHeight: Math.max(handle.height, background.implicitHeight)
+        width: Math.max(handle.width, background.width)
+        height: Math.max(handle.height, background.height)
 
         property NinePatchImage handle: NinePatchImage {
             parent: control.indicator
