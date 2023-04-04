@@ -47,29 +47,7 @@ public:
 
 private:
 
-    /*
-    void generateButton()
-    {
-        generateControl("Button");
-
-        const QMap<QString, QString> stateMap = {
-            {"idle", ""},
-            {"blocked", "disabled"}
-        };
-
-        forEachStateIn("ButtonTemplate",
-            [this, &stateMap](const QString &stateName, const QJsonObject &stateComponent){
-
-            const auto imageState = stateMap.value(stateName, stateName);
-            const auto bg = findNamedChild({"background"}, stateComponent);
-            const auto label = findNamedChild({"label"}, stateComponent);
-            auto config = createConfiguration(bg, label);
-
-            generateImage("button-background", imageState, bg);
-            addConfiguration("button-background", imageState, config);
-        });
-    }
-
+/*
     void generateCheckBox()
     {
         generateControl("CheckBox");
@@ -455,13 +433,15 @@ private:
         auto bgConfig = m_outputConfig[backgroundQualifiedName].toObject();
         const auto contentsConfig = m_outputConfig[contentsQualifiedName].toObject();
 
-        const auto bgGeo = getConfigGeometry(bgConfig);
-        const auto coGeo = getConfigGeometry(contentsConfig);
+        const QRectF bgGeo = getConfigGeometry(bgConfig);
+        const QRectF coGeo = getConfigGeometry(contentsConfig);
+        const qreal spacing = coGeo.x() - bgGeo.x() - bgGeo.width();
 
         bgConfig.insert("leftPadding", coGeo.x());
         bgConfig.insert("topPadding", coGeo.y());
         bgConfig.insert("rightPadding", qMax(0., bgGeo.width() - coGeo.x() - coGeo.width()));
         bgConfig.insert("bottomPadding", qMax(0., bgGeo.height() - coGeo.y() - coGeo.height()));
+        bgConfig.insert("spacing", spacing);
 
         // Overwrite the previous config
         m_outputConfig.insert(backgroundQualifiedName, bgConfig);
